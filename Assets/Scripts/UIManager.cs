@@ -4,15 +4,32 @@ using UnityEngine;
 
 public class UIManager : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public static UIManager instance;
+    private GameObject pickupText, dropText;
+
+    private void Awake()
     {
-        
+        if (instance != null && instance != this)
+        {
+            Destroy(this.gameObject);
+            return;
+        }
+        instance = this;
+        DontDestroyOnLoad(this.gameObject);
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Start()
     {
-        
+        pickupText = transform.GetChild(0).gameObject;
+        dropText = transform.GetChild(1).gameObject;
+    }
+
+    public void PickUpText(bool setVisible)
+    {
+        pickupText.SetActive(setVisible);
+    }
+    public void DropText(bool setVisible)
+    {
+        dropText.SetActive(setVisible);
     }
 }

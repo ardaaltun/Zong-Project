@@ -2,17 +2,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Object : MonoBehaviour
+public class Object : MonoBehaviour, IInteraction
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] private GameObject canvas;
+
+    public void Canvas(bool setVisible)
     {
-        
+        canvas.SetActive(setVisible);
     }
 
-    // Update is called once per frame
-    void Update()
+    public void Interact()
     {
-        
+        Canvas(false);
+        Debug.Log("You interacted");
+    }
+
+    public void ResetObject()
+    {
+        transform.position = new Vector3(1.62f, 0.25f, 0f);
+        transform.localEulerAngles = new Vector3(0f, -90f, 0f);
+        canvas.SetActive(true);
     }
 }

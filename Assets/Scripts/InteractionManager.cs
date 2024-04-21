@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.PackageManager;
 using UnityEngine;
 
 public class InteractionManager : MonoBehaviour
@@ -8,15 +5,50 @@ public class InteractionManager : MonoBehaviour
     [SerializeField] private Camera cam;
     [SerializeField] private float rayDistance;
     [SerializeField] private LayerMask layerMask;
-    void Update()
+    [SerializeField] private bool alreadyPicked;
+    [SerializeField] private Transform handPosition;
+    private void Update()
     {
         RaycastHit hit;
         var hitInfo = Physics.Raycast(cam.transform.position, cam.transform.forward, out hit, rayDistance, layerMask);
 
+        Debug.DrawRay(cam.transform.position, cam.transform.forward * rayDistance, Color.yellow);
         if(hitInfo)
         {
-            Debug.Log(hit.collider.name);
-            Debug.DrawRay(cam.transform.position, cam.transform.forward * rayDistance, Color.yellow);
+            if (!alreadyPicked && hit.collider.CompareTag("Object"))
+                UIManager.instance.PickUpText(hitInfo);
+            else if(alreadyPicked && hit.collider.CompareTag("Box"))
+                UIManager.instance.DropText(hitInfo);
+
+            if(Input.GetKeyDown(KeyCode.E))
+            {
+                if (!alreadyPicked)
+                    PickUpItem(hit);
+                else
+                    DropItem(hit);
+            }
         }
+        else
+        {
+            UIManager.instance.PickUpText(hitInfo);
+            UIManager.instance.DropText(hitInfo);
+        }
+    }
+
+    private void PickUpItem(RaycastHit hit)
+    {
+        hit.collider.gameObject.transform.SetParent(handPosition);
+        hit.collider.gameObject.transform.localPosition = Vector3.zero;
+        hit.collider.gameObject.GetComponent<Object>().Interact();
+        alreadyPicked = true;
+    }
+
+    private void DropItem(RaycastHit hit)
+    {
+        GameObject obj = handPosition.GetChild(0).gameObject;
+        obj.transform.SetParent(hit.collider.transform);
+        obj.GetComponent<Object>().ResetObject(); //the start position, we simply reset the position
+        hit.collider.gameObject.GetComponent<Box>().Interact();
+        alreadyPicked = false;
     }
 }

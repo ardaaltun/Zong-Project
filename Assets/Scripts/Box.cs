@@ -2,17 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Box : MonoBehaviour
+public class Box : MonoBehaviour, IInteraction
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] private ParticleSystem _particle;
+
+    public void Canvas(bool setVisible)
     {
-        
+        //we might need in the future
     }
 
-    // Update is called once per frame
-    void Update()
+    public void Interact()
     {
-        
+
+        PlayParticle();
+    }
+
+    private void PlayParticle()
+    {
+        _particle.startColor = transform.GetChild(0).GetComponent<MeshRenderer>().material.color;
+        _particle.Play();
     }
 }
