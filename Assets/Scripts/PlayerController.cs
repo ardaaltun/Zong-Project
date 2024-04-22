@@ -17,8 +17,7 @@ public class FPSController : MonoBehaviour
     [SerializeField] private CharacterController characterController;
     void Start()
     {
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        UIManager.instance.DisableCursor();
     }
 
     void Update()

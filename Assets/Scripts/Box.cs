@@ -15,11 +15,17 @@ public class Box : MonoBehaviour, IInteraction
     {
 
         PlayParticle();
+        Notify();
     }
 
     private void PlayParticle()
     {
         _particle.startColor = transform.GetChild(0).GetComponent<MeshRenderer>().material.color;
         _particle.Play();
+    }
+
+    public void Notify()
+    {
+        UIManager.instance.Notification(name);
     }
 }
